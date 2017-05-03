@@ -21,7 +21,6 @@ public class DodgeStuff extends HComponent implements UserEventListener {
     int screenWidth = 720;
     int screenHeight = 576;
     int blockY = 0;
-    boolean levelCreated = false;
     
     public DodgeStuff() {
         this.setBounds(0, 0, screenWidth, screenHeight); // x, y, b, h
@@ -45,6 +44,9 @@ public class DodgeStuff extends HComponent implements UserEventListener {
     }
     
     public void paint(Graphics g) {
+        // Random r = new Random();
+        // int randomWidthDivider = r.nextInt(7 - 3) + 3;
+        
         super.paint(g);
         g.setColor(Color.BLUE);
         g.fillRect(0, 0, screenWidth, screenHeight);
@@ -56,19 +58,18 @@ public class DodgeStuff extends HComponent implements UserEventListener {
         g.fillRect(spaceShipX, spaceShipY, 60, 60); // x, y, b, h
         
         g.setColor(Color.GREEN);
-    }
-    
-    public void paintLevel(Graphics g) {
-        super.paint(g);
-        for(int i = 0; i < 100; i++) {
-            Random r = new Random();
-            int randomWidthDivider = r.nextInt(7 - 3) + 3;
-
-            g.fillRect(0, blockY - (screenHeight * i), screenWidth / randomWidthDivider, screenHeight);
-            g.fillRect(screenWidth - (screenWidth / randomWidthDivider), blockY - (screenHeight * i), screenWidth / randomWidthDivider, screenHeight);
+        
+        for(int i = 0; i < 1000; i++) {
+            blockY += 5;
+            g.fillRect(0, blockY - (screenHeight * i), screenWidth / 5, screenHeight);
+            g.fillRect(screenWidth - (screenWidth / 5), blockY - (screenHeight * i), screenWidth / 5, screenHeight);
+            
+            g.fillRect(0, blockY - (screenHeight * (i * 2)), screenWidth / 3, screenHeight);
+            g.fillRect(screenWidth - (screenWidth / 3), blockY - (screenHeight * (i * 2)), screenWidth / 3, screenHeight);
+            
+            
         }
     }
-    paintLevel(g);
     
     public void userEventReceived(UserEvent e) {
         if(e.getType() == HRcEvent.KEY_PRESSED) {
