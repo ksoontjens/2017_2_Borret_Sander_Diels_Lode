@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package hellotvxlet;
+package hellotvxlet.observer;
 
 import java.awt.Color;
 import java.awt.Graphics;

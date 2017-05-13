@@ -1,4 +1,4 @@
-package hellotvxlet;
+package hellotvxlet.observer;
 
 import javax.tv.xlet.Xlet;
 import javax.tv.xlet.XletContext;
