@@ -14,8 +14,8 @@ public class HelloTVXlet implements Xlet {
     public void initXlet(XletContext context) {
         HScene scene = HSceneFactory.getInstance().getDefaultHScene();
 
-        DodgeStuff dodgeStuff = new DodgeStuff();
-        scene.add(dodgeStuff);
+        SlidingPuzzle slidingPuzzle = new SlidingPuzzle();
+        scene.add(slidingPuzzle);
 
         scene.validate();
         scene.setVisible(true);

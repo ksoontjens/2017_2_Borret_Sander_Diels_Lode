@@ -8,13 +8,13 @@ import java.util.TimerTask;
  */
 
 public class TheTimerTask extends TimerTask {
-    DodgeStuff dodgeStuff;
+    SlidingPuzzle slidingPuzzle;
     
-    public void setCallback(DodgeStuff dodgeStuff) {
-        this.dodgeStuff = dodgeStuff;
+    public void setCallback(SlidingPuzzle slidingPuzzle) {
+        this.slidingPuzzle = slidingPuzzle;
     }
     
     public void run() {
-        dodgeStuff.callback();
+        slidingPuzzle.callback();
     }
 }

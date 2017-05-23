@@ -33,13 +33,12 @@ public class DodgeStuff extends HComponent implements UserEventListener {
         
         Timer timer = new Timer();
         TheTimerTask timerTask = new TheTimerTask();
-        timerTask.setCallback(this);
+        // timerTask.setCallback(this);
         timer.scheduleAtFixedRate(timerTask, 0, 100);
         // Start op 0 ms elke 20 ms
     }
     
     public void callback() {
-        blockY += 20;
         this.repaint();
     }
     
@@ -59,15 +58,13 @@ public class DodgeStuff extends HComponent implements UserEventListener {
         
         g.setColor(Color.GREEN);
         
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 100; i++) {
             blockY += 5;
             g.fillRect(0, blockY - (screenHeight * i), screenWidth / 5, screenHeight);
             g.fillRect(screenWidth - (screenWidth / 5), blockY - (screenHeight * i), screenWidth / 5, screenHeight);
             
             g.fillRect(0, blockY - (screenHeight * (i * 2)), screenWidth / 3, screenHeight);
             g.fillRect(screenWidth - (screenWidth / 3), blockY - (screenHeight * (i * 2)), screenWidth / 3, screenHeight);
-            
-            
         }
     }
     
