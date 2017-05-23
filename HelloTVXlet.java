@@ -2,11 +2,15 @@ package hellotvxlet;
 
 import java.awt.event.ActionEvent;
 import javax.tv.xlet.*;
+import org.dvb.event.UserEvent;
 import org.havi.ui.*;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import org.dvb.event.UserEventListener;
 import org.havi.ui.event.HActionListener;
 
-public class HelloTVXlet implements Xlet, HActionListener {
+public class HelloTVXlet extends HComponent implements Xlet, HActionListener, UserEventListener {
     HScene scene = HSceneFactory.getInstance().getDefaultHScene();
     int screenWidth = 720;
     int screenHeight = 576;
@@ -18,18 +22,28 @@ public class HelloTVXlet implements Xlet, HActionListener {
     int centerOffsetY = (screenHeight - (tileSize * tileRows)) / 2;
     int tilesIndex = 0;
     int emptyTilePosition = amountOfTiles;
-    HTextButton tiles[] = new HTextButton[amountOfTiles];
+    HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
+    Image images[] = new Image[amountOfTiles];
     String buttonText = "";
     String actionCommand = "";
     String emptyString = "EMPTY";
+    MediaTracker mediaTracker = new MediaTracker(this);
   
     public HelloTVXlet() {
         
     }
 
     public void initXlet(XletContext context) throws XletStateChangeException {
+        scene.setBounds(0, 0, screenWidth, screenHeight);
         scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
         scene.setBackground(Color.BLACK);
+        
+        for(int i = 0; i < amountOfTiles - 1; i++) {
+            images[i] = this.getToolkit().getImage(Integer.toString(i + 1) + ".png");
+            mediaTracker.addImage(images[i], 1);
+        }
+        images[amountOfTiles - 1] = this.getToolkit().getImage("EMPTY.png");
+        mediaTracker.addImage(images[amountOfTiles - 1], 1);
         
         for(int i = 0; i < tileColumns; i++) {
             for(int j = 0; j < tileRows; j++) {
@@ -41,7 +55,7 @@ public class HelloTVXlet implements Xlet, HActionListener {
                     buttonText = Integer.toString(tilesIndex + 1);
                     actionCommand = "tile" + Integer.toString(tilesIndex + 1);
                 }
-                tiles[tilesIndex] = new HTextButton(buttonText, centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
+                tiles[tilesIndex] = new HGraphicButton(images[tilesIndex], centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
                 tiles[tilesIndex].setBackgroundMode(HVisible.BACKGROUND_FILL);
                 tiles[tilesIndex].setBackground(Color.RED);
                 scene.add(tiles[tilesIndex]);
@@ -91,25 +105,33 @@ public class HelloTVXlet implements Xlet, HActionListener {
             if(pressedTileNumber == (emptyTilePosition - 1) || pressedTileNumber == (emptyTilePosition - 3) ||
                pressedTileNumber == (emptyTilePosition + 1) || pressedTileNumber == (emptyTilePosition + 3)) {
                 tiles[emptyTilePosition - 1].setActionCommand("tile" + Integer.toString(pressedTileNumber));
-                tiles[emptyTilePosition - 1].setTextContent(Integer.toString(pressedTileNumber), HVisible.NORMAL_STATE);
+                tiles[emptyTilePosition - 1].setGraphicContent(images[pressedTileNumber - 1], HVisible.NORMAL_STATE);
                 emptyTilePosition = pressedTileNumber;
                 
                 tiles[pressedTileNumber - 1].setActionCommand(emptyString);
-                tiles[pressedTileNumber - 1].setTextContent(emptyString, HVisible.NORMAL_STATE);
+                tiles[pressedTileNumber - 1].setGraphicContent(images[amountOfTiles - 1], HVisible.NORMAL_STATE);
                 
+                System.out.println("--------------------");
                 System.out.println("Valid click");
-                System.out.println(tiles[emptyTilePosition - 1].getActionCommand());
+                System.out.println("Empty tile position: " + emptyTilePosition);
+                System.out.println("Pressed tile number: " + pressedTileNumber);
+                System.out.println("Pressed tile number action command: " + pressedActionCommand);
             }
             else {
-                System.out.println(pressedActionCommand);
+                System.out.println("--------------------");
+                System.out.println("Invalid click");
+                System.out.println("Empty tile position: " + emptyTilePosition);
+                System.out.println("Pressed tile number: " + pressedTileNumber);
+                System.out.println("Pressed tile number action command: " + pressedActionCommand);
             }
         }
         else {
-            for(int i = 0; i < amountOfTiles; i++) {
-                if(tiles[i].getTextContent(HVisible.NORMAL_STATE).equals(emptyString)) {
-                    System.out.println(tiles[i].getActionCommand());
-                }
-            }
+            System.out.println("--------------------");
+            System.out.println("Pressed empty tile");
         }
+    }
+
+    public void userEventReceived(UserEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
