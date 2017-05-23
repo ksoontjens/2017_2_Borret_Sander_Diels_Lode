@@ -32,7 +32,8 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     public HelloTVXlet() {
         
     }
-
+    
+    // 't Is wel nogal een zootje
     public void initXlet(XletContext context) throws XletStateChangeException {
         scene.setBounds(0, 0, screenWidth, screenHeight);
         scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
@@ -42,7 +43,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             images[i] = this.getToolkit().getImage(Integer.toString(i + 1) + ".png");
             mediaTracker.addImage(images[i], 1);
         }
-        images[amountOfTiles - 1] = this.getToolkit().getImage("EMPTY.png");
+        images[amountOfTiles - 1] = this.getToolkit().getImage(emptyString + ".png");
         mediaTracker.addImage(images[amountOfTiles - 1], 1);
         
         for(int i = 0; i < tileColumns; i++) {
@@ -75,7 +76,6 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             else {
                 tiles[i].setFocusTraversal(null, null, tiles[i - 1], tiles[i + 1]);
             }
-
         }
         
         tiles[0].requestFocus();
@@ -102,6 +102,13 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         if(!pressedActionCommand.equals(emptyString)) {
             int pressedTileNumber = Integer.parseInt(pressedActionCommand.substring(actionCommand.length() - 1));
             
+            /*
+             * Het probleem is nu dat als ge een tegel verplaatst, die tegel zijn actionCommand behoudt.
+             * Dus als ge bijvoorbeeld tegel 8 naar 9 verplaatst, de tegel die nu op plaats 9 staat nog altijd 'tile8' noemt.
+             * Daardoor loopt het dan mis met de detectie van geldige tegels om te verplaatsen (de if hieronder).
+             * Voel je vrij om mijn code te slopen als ge een beter systeem bedenkt.
+             * Aja en elke keer als ge klikt op een tegel verschijnt er debuginfo in de console, kan handig zijn.
+            */
             if(pressedTileNumber == (emptyTilePosition - 1) || pressedTileNumber == (emptyTilePosition - 3) ||
                pressedTileNumber == (emptyTilePosition + 1) || pressedTileNumber == (emptyTilePosition + 3)) {
                 tiles[emptyTilePosition - 1].setActionCommand("tile" + Integer.toString(pressedTileNumber));
