@@ -9,30 +9,38 @@ import org.havi.ui.event.HActionListener;
 
 public class HelloTVXlet implements Xlet, HActionListener {
     HScene scene = HSceneFactory.getInstance().getDefaultHScene();
+    int screenWidth = 720;
+    int screenHeight = 576;
+    int tileSize = 100;
+    int tileColumns = 3;
+    int tileRows = 3;
+    int amountOfTiles = tileRows * tileColumns;
+    int centerOffsetX = (screenWidth - (tileSize * tileRows)) / 2;
+    int centerOffsetY = (screenHeight - (tileSize * tileRows)) / 2;
+    HTextButton tiles[] = new HTextButton[amountOfTiles];
+    int tilesIndex = 0;
   
     public HelloTVXlet() {
         
     }
 
     public void initXlet(XletContext context) throws XletStateChangeException {
-        HTextButton tile1 = new HTextButton("1", 0, 0, 100, 100); // x, y, w, h
-        HTextButton tile2 = new HTextButton("2", 100, 0, 100, 100); // x, y, w, h
-        HTextButton tile3 = new HTextButton("3", 200, 0, 100, 100); // x, y, w, h
+        scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        scene.setBackground(Color.BLACK);
         
-        tile1.setBackgroundMode(HVisible.BACKGROUND_FILL);
-        tile1.setBackground(Color.RED);
-        tile2.setBackgroundMode(HVisible.BACKGROUND_FILL);
-        tile2.setBackground(Color.RED);
-        tile3.setBackgroundMode(HVisible.BACKGROUND_FILL);
-        tile3.setBackground(Color.RED);
-        
-        scene.add(tile1);
-        scene.add(tile2);
-        scene.add(tile3);
-        
-        tile1.setFocusTraversal(null, null, null, tile2); // up, down, left, right
-        tile2.setFocusTraversal(null, null, tile1, tile3); // up, down, left, right
-        tile3.setFocusTraversal(null, null, tile2, null); // up, down, left, right
+        for(int i = 0; i < tileRows; i++) {
+            for(int j = 0; j < tileColumns; j++) {
+                tiles[tilesIndex] = new HTextButton(Integer.toString(tilesIndex + 1), centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
+                tiles[tilesIndex].setBackgroundMode(HVisible.BACKGROUND_FILL);
+                tiles[tilesIndex].setBackground(Color.RED);
+                scene.add(tiles[tilesIndex]);
+                tilesIndex++;
+            }
+        }
+        /*
+        tile1.setFocusTraversal(null, null, null, tile2);
+        tile2.setFocusTraversal(null, null, tile1, tile3);
+        tile3.setFocusTraversal(null, null, tile2, null);
       
         tile1.setActionCommand("tile1");
         tile2.setActionCommand("tile2");
@@ -42,7 +50,7 @@ public class HelloTVXlet implements Xlet, HActionListener {
         tile2.addHActionListener((HActionListener) this);
         tile3.addHActionListener((HActionListener) this);
       
-        tile1.requestFocus();
+        tile1.requestFocus();*/
 
         scene.validate();
         scene.setVisible(true);
