@@ -41,11 +41,13 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     int lostScorePerSecond = 250;
     int textHeight = 40;
     boolean timerStart = false;
-    String emptyString = "EMPTY";
+    String imageExtension = ".png";
+    String emptyString = "empty";
+    String fullString = "full";
     String movesString = "Moves: ";
     String timeString = "Time: ";
     String scoreString = "Score: ";
-    String winString = "You win!";
+    String winString = "YOU ARE THE BEST";
     String madeByString = "Made by Sander Borret & Lode Diels";
     String specialThanksString = "Special thanks: Pieter Melis & Thomas Verhelst";
     Image images[] = new Image[amountOfTiles]; // Images in C:\Program Files\TechnoTrend\TT-MHP-Browser\fileio\DSMCC\0.0.3
@@ -168,14 +170,14 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     
     public void populateImageArray() {
         for(int i = 0; i < amountOfTiles - 1; i++) {
-            images[i] = this.getToolkit().getImage(Integer.toString(i + 1) + ".png");
+            images[i] = this.getToolkit().getImage(Integer.toString(i + 1) + imageExtension);
             mediaTracker.addImage(images[i], 1);
         }
         
-        images[amountOfTiles - 1] = this.getToolkit().getImage(emptyString + ".png");
+        images[amountOfTiles - 1] = this.getToolkit().getImage(emptyString + imageExtension);
         mediaTracker.addImage(images[amountOfTiles - 1], 1);
         
-        fullImage = this.getToolkit().getImage("spaceship.png");
+        fullImage = this.getToolkit().getImage(fullString + imageExtension);
         mediaTracker.addImage(fullImage, 1);
         
         try {
@@ -253,8 +255,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         winText.setFont(winTextFont);
         winText.setForeground(Color.YELLOW);
 
-        fullImageTile.setBackgroundMode(HVisible.BACKGROUND_FILL);
-        fullImageTile.setBackground(Color.RED);
+        fullImageTile.setBordersEnabled(false);
 
         winScene.add(winText);
         winScene.add(madeByText);
