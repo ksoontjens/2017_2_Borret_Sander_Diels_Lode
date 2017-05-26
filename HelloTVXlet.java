@@ -21,9 +21,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     int centerOffsetY = (screenHeight - (tileSize * tileRows)) / 2;
     int tilesIndex;
     int emptyTilePosition;
+    int moves = 0;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
     Image images[] = new Image[amountOfTiles];
+    HStaticText movesText;
     String emptyString = "EMPTY";
     MediaTracker mediaTracker = new MediaTracker(this);
   
@@ -52,6 +54,9 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
                 tilesIndex++;
             }
         }
+        
+      movesText = new HStaticText("Moves: " + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, 50);
+      scene.add(movesText);
         
         
         for(int i = 0; i < amountOfTiles; i++) {
@@ -116,9 +121,8 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             
             emptyTilePosition = pressedTileNumber;
             
-            for(int i = 0; i < indexes.length; i++) {
-                System.out.println("[" + i + "]: " + indexes[i]);
-            }
+            moves++;
+            movesText.setTextContent("Moves: " + Integer.toString(moves), HVisible.NORMAL_STATE);
         }
     }
     
