@@ -20,9 +20,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     int centerOffsetX = (screenWidth - (tileSize * tileRows)) / 2;
     int centerOffsetY = (screenHeight - (tileSize * tileRows)) / 2;
     int tilesIndex = 0;
-    int emptyTilePosition = amountOfTiles;
-    int indexes[] = {7, 3, 5, 1, 2, 6, 0, 4, 8};
+    int emptyTilePosition;
+    int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
+    HTextButton shuffleButton;
     Image images[] = new Image[amountOfTiles];
     Random r;
     String emptyString = "EMPTY";
@@ -36,6 +37,9 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         scene.setBounds(0, 0, screenWidth, screenHeight);
         scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
         scene.setBackground(Color.BLACK);
+        
+        shuffleArray(indexes);
+        emptyTilePosition = getEmptyTilePosition();
         
         for(int i = 0; i < amountOfTiles - 1; i++) {
             images[i] = this.getToolkit().getImage(Integer.toString(i + 1) + ".png");
@@ -66,13 +70,31 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         
         for(int i = 0; i < amountOfTiles; i++) {
             if(i == 0) {
-                tiles[i].setFocusTraversal(null, null, tiles[amountOfTiles - 1], tiles[i + 1]);
+                tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i + 2], tiles[i + 1]);
             }
-            else if(i == amountOfTiles - 1) {
-                tiles[i].setFocusTraversal(null, null, tiles[i - 1], tiles[0]);
+            else if(i == 1) {
+                tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i - 1], tiles[i + 1]);
             }
-            else {
-                tiles[i].setFocusTraversal(null, null, tiles[i - 1], tiles[i + 1]);
+            else if(i == 2) {
+                tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i - 1], tiles[i - 2]);
+            }
+            else if(i == 3) {
+                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i + 2], tiles[i + 1]);
+            }
+            else if(i == 4) {
+                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i - 1], tiles[i + 1]);
+            }
+            else if(i == 5) {
+                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i - 1], tiles[i - 2]);
+            }
+            else if(i == 6) {
+                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i + 2], tiles[i + 1]);
+            }
+            else if(i == 7) {
+                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i - 1], tiles[i + 1]);
+            }
+            else if(i == 8) {
+                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i - 1], tiles[i - 2]);
             }
         }
         
@@ -116,6 +138,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             else {
                 return;
             }
+            
             tiles[emptyTilePosition - 1].setGraphicContent(pressedTileImage, HVisible.NORMAL_STATE);
 
             tiles[pressedTileNumber - 1].setActionCommand(emptyString);
@@ -137,5 +160,26 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             System.out.println("--------------------");
             System.out.println("Pressed empty tile");
         }
+    }
+    
+    public void shuffleArray(int[] array) {
+        for(int i = array.length - 1; i > 0; i--) {
+            Random rnd = new Random();
+            int index = rnd.nextInt(i + 1);
+            int temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
+        }
+    }
+    
+    public int getEmptyTilePosition() {
+        for(int i = 0; i < indexes.length; i++) {
+            if(indexes[i] == amountOfTiles - 1) {
+                emptyTilePosition = i + 1;
+                break;
+            }
+        }
+        
+        return emptyTilePosition;
     }
 }
