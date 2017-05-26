@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.text.NumberFormat;
 import org.havi.ui.event.HActionListener;
 import java.util.Random;
 import java.util.Timer;
@@ -157,7 +158,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             moves++;
             movesText.setTextContent(movesString + Integer.toString(moves), HVisible.NORMAL_STATE);
             score -= lostScorePerMove;
-            scoreText.setTextContent(scoreString + Integer.toString(score), HVisible.NORMAL_STATE);
+            scoreText.setTextContent(scoreString + NumberFormat.getInstance().format(score), HVisible.NORMAL_STATE);
         }
     }
     
@@ -205,7 +206,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     public void createStatTexts(HScene scene) {
           movesText = new HStaticText(movesString + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, textHeight);
           timeText = new HStaticText(timeString + time, centerOffsetX, centerOffsetY + (tileSize * tileRows) + textHeight, tileSize * tileRows, textHeight);
-          scoreText = new HStaticText(scoreString + score, centerOffsetX, centerOffsetY + (tileSize * tileRows) + (textHeight * 2), tileSize * tileRows, textHeight);
+          scoreText = new HStaticText(scoreString + NumberFormat.getInstance().format(score), centerOffsetX, centerOffsetY + (tileSize * tileRows) + (textHeight * 2), tileSize * tileRows, textHeight);
           scene.add(movesText);
           scene.add(timeText);
           scene.add(scoreText);
@@ -217,44 +218,48 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             time++;
             timeText.setTextContent(timeString + Integer.toString(time), HVisible.NORMAL_STATE);
             score -= lostScorePerSecond;
-            scoreText.setTextContent(scoreString + Integer.toString(score), HVisible.NORMAL_STATE);
+            scoreText.setTextContent(scoreString + NumberFormat.getInstance().format(score), HVisible.NORMAL_STATE);
             
             for(int i = 0; i < amountOfTiles; i++) {
                 if(tiles[i].getGraphicContent(HVisible.NORMAL_STATE).equals(images[i])) {
                     correctTiles++;
                 }
             }
-            System.out.println(correctTiles);
-            if(correctTiles >= 1) {
-                timerStart = false;
-                scene.dispose();
-                
-                HScene winScene = HSceneFactory.getInstance().getDefaultHScene();
-                winScene.setBounds(0, 0, screenWidth, screenHeight);
-                winScene.setBackgroundMode(HVisible.BACKGROUND_FILL);
-                winScene.setBackground(Color.BLACK);
-                
-                winText = new HStaticText(winString, 0, 0, screenWidth, textHeight * 2);
-                madeByText = new HStaticText(madeByString, 0, textHeight + (textHeight / 2), screenWidth, textHeight);
-                specialThanksText = new HStaticText(specialThanksString, 0, (textHeight * 2) + (textHeight / 2), screenWidth, textHeight);
-                fullImageTile = new HGraphicButton(fullImage, centerOffsetX, centerOffsetY, tileSize * tileRows, tileSize * tileColumns);
-                createStatTexts(winScene);
-                
-                Font winTextFont = new Font("", Font.BOLD, 50);
-                winText.setFont(winTextFont);
-                winText.setForeground(Color.YELLOW);
-                
-                fullImageTile.setBackgroundMode(HVisible.BACKGROUND_FILL);
-                fullImageTile.setBackground(Color.RED);
-                
-                winScene.add(winText);
-                winScene.add(madeByText);
-                winScene.add(specialThanksText);
-                winScene.add(fullImageTile);
-                
-                winScene.validate();
-                winScene.setVisible(true);
+            
+            if(correctTiles >= 8) {
+                win();
             }
         }
+    }
+    
+    public void win() {
+        timerStart = false;
+        scene.dispose();
+
+        HScene winScene = HSceneFactory.getInstance().getDefaultHScene();
+        winScene.setBounds(0, 0, screenWidth, screenHeight);
+        winScene.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        winScene.setBackground(Color.BLACK);
+
+        winText = new HStaticText(winString, 0, 0, screenWidth, textHeight * 2);
+        madeByText = new HStaticText(madeByString, 0, textHeight + (textHeight / 2), screenWidth, textHeight);
+        specialThanksText = new HStaticText(specialThanksString, 0, (textHeight * 2) + (textHeight / 2), screenWidth, textHeight);
+        fullImageTile = new HGraphicButton(fullImage, centerOffsetX, centerOffsetY, tileSize * tileRows, tileSize * tileColumns);
+        createStatTexts(winScene);
+
+        Font winTextFont = new Font("", Font.BOLD, 50);
+        winText.setFont(winTextFont);
+        winText.setForeground(Color.YELLOW);
+
+        fullImageTile.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        fullImageTile.setBackground(Color.RED);
+
+        winScene.add(winText);
+        winScene.add(madeByText);
+        winScene.add(specialThanksText);
+        winScene.add(fullImageTile);
+
+        winScene.validate();
+        winScene.setVisible(true);
     }
 }
