@@ -1,22 +1,28 @@
 package hellotvxlet;
 
 import java.awt.event.ActionEvent;
-import javax.tv.xlet.*;
-import org.havi.ui.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.text.NumberFormat;
-import org.havi.ui.event.HActionListener;
 import java.util.Random;
 import java.util.Timer;
+import java.text.NumberFormat;
+import org.havi.ui.*;
+import org.havi.ui.event.HActionListener;
+import org.havi.ui.event.HRcEvent;
+import org.dvb.event.UserEvent;
+import org.dvb.event.UserEventListener;
+import org.dvb.event.EventManager;
+import org.dvb.event.UserEventRepository;
+import javax.tv.xlet.*;
+
 
 /**
  *
  * @author Sander Borret & Lode Diels
  */
-public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
+public class HelloTVXlet extends HComponent implements Xlet, HActionListener, UserEventListener {
     HScene scene = HSceneFactory.getInstance().getDefaultHScene();
     int screenWidth = scene.getWidth();
     int screenHeight = scene.getHeight();
@@ -64,6 +70,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         scene.setBounds(0, 0, screenWidth, screenHeight);
         scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
         scene.setBackground(Color.BLACK);
+        
+        UserEventRepository repo = new UserEventRepository("repo");
+        repo.addAllNumericKeys();
+        EventManager manager = EventManager.getInstance();
+        manager.addUserEventListener(this, repo);
         
         Timer timer = new Timer();
         GameTimer gameTimer = new GameTimer();
@@ -226,7 +237,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
                 }
             }
             
-            if(correctTiles >= 8) {
+            if(correctTiles >= amountOfTiles - 1) {
                 win();
             }
         }
@@ -261,5 +272,22 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
 
         winScene.validate();
         winScene.setVisible(true);
+    }
+
+    public void userEventReceived(UserEvent e) {
+        int numericKeys[] = {HRcEvent.VK_0, HRcEvent.VK_1, HRcEvent.VK_2, HRcEvent.VK_3, HRcEvent.VK_4, HRcEvent.VK_5, HRcEvent.VK_6, HRcEvent.VK_7, HRcEvent.VK_8, HRcEvent.VK_9};
+        
+        if(e.getType() == HRcEvent.KEY_PRESSED) {
+            if(e.getCode() == numericKeys[0]) {
+                win();
+            }
+            else {
+                for(int i = 1; i < numericKeys.length; i++) {
+                    if(e.getCode() == numericKeys[i]) {
+                        tiles[i - 1].requestFocus();
+                    }
+                }
+            }
+        }
     }
 }
