@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import org.havi.ui.event.HActionListener;
+import java.util.Random;
 
 public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     HScene scene = HSceneFactory.getInstance().getDefaultHScene();
@@ -20,9 +21,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     int centerOffsetY = (screenHeight - (tileSize * tileRows)) / 2;
     int tilesIndex = 0;
     int emptyTilePosition = amountOfTiles;
+    int indexes[] = {7, 3, 5, 1, 2, 6, 0, 4, 8};
     HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
     Image images[] = new Image[amountOfTiles];
-    String actionCommand = "";
+    Random r;
     String emptyString = "EMPTY";
     MediaTracker mediaTracker = new MediaTracker(this);
   
@@ -44,17 +46,19 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         
         for(int i = 0; i < tileColumns; i++) {
             for(int j = 0; j < tileRows; j++) {
-                if(i == tileColumns - 1 && j == tileRows - 1) {
-                    actionCommand = emptyString;
-                }
-                else {
-                    actionCommand = Integer.toString(tilesIndex + 1);
-                }
-                tiles[tilesIndex] = new HGraphicButton(images[tilesIndex], centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
+                tiles[tilesIndex] = new HGraphicButton(images[indexes[tilesIndex]], centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
                 tiles[tilesIndex].setBackgroundMode(HVisible.BACKGROUND_FILL);
                 tiles[tilesIndex].setBackground(Color.RED);
-                tiles[tilesIndex].setActionCommand(actionCommand);
+                
                 tiles[tilesIndex].addHActionListener(this);
+                
+                if(i == tileColumns - 1 && j == tileRows - 1) {
+                    tiles[tilesIndex].setActionCommand(emptyString);
+                }
+                else {
+                    tiles[tilesIndex].setActionCommand(Integer.toString(tilesIndex + 1));
+                }
+                
                 scene.add(tiles[tilesIndex]);
                 tilesIndex++;
             }
@@ -116,12 +120,18 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
 
             tiles[pressedTileNumber - 1].setActionCommand(emptyString);
             tiles[pressedTileNumber - 1].setGraphicContent(images[amountOfTiles - 1], HVisible.NORMAL_STATE);
-
+            
+            indexes[pressedTileNumber - 1] = amountOfTiles - 1;
+            indexes[emptyTilePosition - 1] = pressedTileNumber - 1;
+            
             emptyTilePosition = pressedTileNumber;
 
             System.out.println("--------------------");
             System.out.println("Empty tile position: " + emptyTilePosition);
             System.out.println("Pressed tile number: " + pressedTileNumber);
+            for(int i = 0; i < indexes.length; i++) {
+                System.out.println(indexes[i]);
+            }
         }
         else {
             System.out.println("--------------------");
