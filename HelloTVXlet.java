@@ -51,11 +51,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
                     actionCommand = Integer.toString(tilesIndex + 1);
                 }
                 tiles[tilesIndex] = new HGraphicButton(images[tilesIndex], centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
-                scene.add(tiles[tilesIndex]);
                 tiles[tilesIndex].setBackgroundMode(HVisible.BACKGROUND_FILL);
                 tiles[tilesIndex].setBackground(Color.RED);
                 tiles[tilesIndex].setActionCommand(actionCommand);
                 tiles[tilesIndex].addHActionListener(this);
+                scene.add(tiles[tilesIndex]);
                 tilesIndex++;
             }
         }
@@ -95,27 +95,33 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         
         if(!pressedTile.equals(emptyString)) {
             int pressedTileNumber = Integer.parseInt(pressedTile);
+            Image pressedTileImage = tiles[pressedTileNumber - 1].getGraphicContent(HVisible.NORMAL_STATE);
             
-            if(pressedTileNumber == (emptyTilePosition - 1) || pressedTileNumber == (emptyTilePosition - 3) ||
-               pressedTileNumber == (emptyTilePosition + 1) || pressedTileNumber == (emptyTilePosition + 3)) {
-                tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber));
-                tiles[emptyTilePosition - 1].setGraphicContent(images[pressedTileNumber - 1], HVisible.NORMAL_STATE);
-                emptyTilePosition = pressedTileNumber;
-                
-                tiles[pressedTileNumber - 1].setActionCommand(emptyString);
-                tiles[pressedTileNumber - 1].setGraphicContent(images[amountOfTiles - 1], HVisible.NORMAL_STATE);
-                
-                System.out.println("--------------------");
-                System.out.println("Valid click");
-                System.out.println("Empty tile position: " + emptyTilePosition);
-                System.out.println("Pressed tile number: " + pressedTileNumber);
+            if(pressedTileNumber == (emptyTilePosition - 1) && emptyTilePosition != 4  && emptyTilePosition != 7) {
+                tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber + 1));
+            }
+            else if(pressedTileNumber == (emptyTilePosition + 1) && emptyTilePosition !=3 && emptyTilePosition != 6) {
+                tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber - 1));
+            }
+            else if(pressedTileNumber == (emptyTilePosition - 3)) {
+                tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber + 3));
+            }
+            else if(pressedTileNumber == (emptyTilePosition + 3)) {
+                tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber - 3));
             }
             else {
-                System.out.println("--------------------");
-                System.out.println("Invalid click");
-                System.out.println("Empty tile position: " + emptyTilePosition);
-                System.out.println("Pressed tile number: " + pressedTileNumber);
+                return;
             }
+            tiles[emptyTilePosition - 1].setGraphicContent(pressedTileImage, HVisible.NORMAL_STATE);
+
+            tiles[pressedTileNumber - 1].setActionCommand(emptyString);
+            tiles[pressedTileNumber - 1].setGraphicContent(images[amountOfTiles - 1], HVisible.NORMAL_STATE);
+
+            emptyTilePosition = pressedTileNumber;
+
+            System.out.println("--------------------");
+            System.out.println("Empty tile position: " + emptyTilePosition);
+            System.out.println("Pressed tile number: " + pressedTileNumber);
         }
         else {
             System.out.println("--------------------");
