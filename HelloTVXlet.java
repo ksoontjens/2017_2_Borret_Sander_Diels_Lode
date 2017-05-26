@@ -28,15 +28,22 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     int emptyTilePosition;
     int moves = 0;
     int time = 0;
+    int score = 1000000;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    int lostScorePerMove = 500;
+    int lostScorePerSecond = 250;
+    int textHeight = 40;
+    boolean timerStart = false;
     HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
     // Images in C:\Program Files\TechnoTrend\TT-MHP-Browser\fileio\DSMCC\0.0.3
     Image images[] = new Image[amountOfTiles];
     HStaticText movesText;
     HStaticText timeText;
+    HStaticText scoreText;
     String emptyString = "EMPTY";
     String movesString = "Moves: ";
     String timeString = "Time: ";
+    String scoreString = "Score: ";
     MediaTracker mediaTracker = new MediaTracker(this);
   
     public HelloTVXlet() {
@@ -70,10 +77,12 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             }
         }
         
-      movesText = new HStaticText(movesString + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, 25);
-      timeText = new HStaticText(timeString + time, centerOffsetX, centerOffsetY + (tileSize * tileRows) + 25, tileSize * tileRows, 25);
+      movesText = new HStaticText(movesString + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, textHeight);
+      timeText = new HStaticText(timeString + time, centerOffsetX, centerOffsetY + (tileSize * tileRows) + textHeight, tileSize * tileRows, textHeight);
+      scoreText = new HStaticText(scoreString + score, centerOffsetX, centerOffsetY + (tileSize * tileRows) + (textHeight * 2), tileSize * tileRows, textHeight);
       scene.add(movesText);
       scene.add(timeText);
+      scene.add(scoreText);
         
         for(int i = 0; i < amountOfTiles; i++) {
             switch(i) {
@@ -130,6 +139,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
                 return;
             }
             
+            if(!timerStart) {
+                timerStart = true;
+            }
+            
             tiles[emptyTilePosition - 1].setGraphicContent(pressedTileImage, HVisible.NORMAL_STATE);
 
             tiles[pressedTileNumber - 1].setActionCommand(emptyString);
@@ -139,6 +152,8 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             
             moves++;
             movesText.setTextContent(movesString + Integer.toString(moves), HVisible.NORMAL_STATE);
+            score -= lostScorePerMove;
+            scoreText.setTextContent(scoreString + Integer.toString(score), HVisible.NORMAL_STATE);
         }
     }
     
@@ -174,7 +189,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     }
     
     public void callback() {
-        time++;
-        timeText.setTextContent(timeString + Integer.toString(time), HVisible.NORMAL_STATE);
+        if(timerStart) {
+            time++;
+            timeText.setTextContent(timeString + Integer.toString(time), HVisible.NORMAL_STATE);
+            score -= lostScorePerSecond;
+            scoreText.setTextContent(scoreString + Integer.toString(score), HVisible.NORMAL_STATE);
+        }
     }
 }
