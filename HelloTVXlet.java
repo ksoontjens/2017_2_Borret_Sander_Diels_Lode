@@ -8,7 +8,12 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import org.havi.ui.event.HActionListener;
 import java.util.Random;
+import java.util.Timer;
 
+/**
+ *
+ * @author Sander Borret & Lode Diels
+ */
 public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     HScene scene = HSceneFactory.getInstance().getDefaultHScene();
     int screenWidth = 720;
@@ -22,11 +27,16 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     int tilesIndex;
     int emptyTilePosition;
     int moves = 0;
+    int time = 0;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
+    // Images in C:\Program Files\TechnoTrend\TT-MHP-Browser\fileio\DSMCC\0.0.3
     Image images[] = new Image[amountOfTiles];
     HStaticText movesText;
+    HStaticText timeText;
     String emptyString = "EMPTY";
+    String movesString = "Moves: ";
+    String timeString = "Time: ";
     MediaTracker mediaTracker = new MediaTracker(this);
   
     public HelloTVXlet() {
@@ -37,6 +47,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         scene.setBounds(0, 0, screenWidth, screenHeight);
         scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
         scene.setBackground(Color.BLACK);
+        
+        Timer timer = new Timer();
+        GameTimer gameTimer = new GameTimer();
+        gameTimer.setCallback(this);
+        timer.scheduleAtFixedRate(gameTimer, 0, 1000);
         
         shuffleArray(indexes);
         emptyTilePosition = getEmptyTilePosition();
@@ -55,9 +70,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             }
         }
         
-      movesText = new HStaticText("Moves: " + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, 50);
+      movesText = new HStaticText(movesString + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, 25);
+      timeText = new HStaticText(timeString + time, centerOffsetX, centerOffsetY + (tileSize * tileRows) + 25, tileSize * tileRows, 25);
       scene.add(movesText);
-        
+      scene.add(timeText);
         
         for(int i = 0; i < amountOfTiles; i++) {
             switch(i) {
@@ -122,7 +138,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             emptyTilePosition = pressedTileNumber;
             
             moves++;
-            movesText.setTextContent("Moves: " + Integer.toString(moves), HVisible.NORMAL_STATE);
+            movesText.setTextContent(movesString + Integer.toString(moves), HVisible.NORMAL_STATE);
         }
     }
     
@@ -155,5 +171,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
         
         images[amountOfTiles - 1] = this.getToolkit().getImage(emptyString + ".png");
         mediaTracker.addImage(images[amountOfTiles - 1], 1);
+    }
+    
+    public void callback() {
+        time++;
+        timeText.setTextContent(timeString + Integer.toString(time), HVisible.NORMAL_STATE);
     }
 }
