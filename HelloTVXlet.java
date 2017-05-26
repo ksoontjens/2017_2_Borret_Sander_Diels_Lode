@@ -17,7 +17,6 @@ import org.dvb.event.EventManager;
 import org.dvb.event.UserEventRepository;
 import javax.tv.xlet.*;
 
-
 /**
  *
  * @author Sander Borret & Lode Diels
@@ -42,8 +41,14 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     int lostScorePerSecond = 250;
     int textHeight = 40;
     boolean timerStart = false;
-    // Images in C:\Program Files\TechnoTrend\TT-MHP-Browser\fileio\DSMCC\0.0.3
-    Image images[] = new Image[amountOfTiles];
+    String emptyString = "EMPTY";
+    String movesString = "Moves: ";
+    String timeString = "Time: ";
+    String scoreString = "Score: ";
+    String winString = "You win!";
+    String madeByString = "Made by Sander Borret & Lode Diels";
+    String specialThanksString = "Special thanks: Pieter Melis & Thomas Verhelst";
+    Image images[] = new Image[amountOfTiles]; // Images in C:\Program Files\TechnoTrend\TT-MHP-Browser\fileio\DSMCC\0.0.3
     Image fullImage;
     HGraphicButton tiles[] = new HGraphicButton[amountOfTiles];
     HGraphicButton fullImageTile;
@@ -53,13 +58,6 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     HStaticText winText;
     HStaticText madeByText;
     HStaticText specialThanksText;
-    String emptyString = "EMPTY";
-    String movesString = "Moves: ";
-    String timeString = "Time: ";
-    String scoreString = "Score: ";
-    String winString = "You win!";
-    String madeByString = "Made by Sander Borret & Lode Diels";
-    String specialThanksString = "Special thanks: Pieter Melis & Thomas Verhelst";
     MediaTracker mediaTracker = new MediaTracker(this);
   
     public HelloTVXlet() {
@@ -67,9 +65,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     }
     
     public void initXlet(XletContext context) throws XletStateChangeException {
-        scene.setBounds(0, 0, screenWidth, screenHeight);
-        scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
-        scene.setBackground(Color.BLACK);
+        setScene(scene);
         
         UserEventRepository repo = new UserEventRepository("repo");
         repo.addAllNumericKeys();
@@ -89,8 +85,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         for(int i = 0; i < tileColumns; i++) {
             for(int j = 0; j < tileRows; j++) {
                 tiles[tilesIndex] = new HGraphicButton(images[indexes[tilesIndex]], centerOffsetX + (tileSize * j), centerOffsetY + (tileSize * i), tileSize, tileSize);
-                tiles[tilesIndex].setBackgroundMode(HVisible.BACKGROUND_FILL);
-                tiles[tilesIndex].setBackground(Color.RED);
+                tiles[tilesIndex].setBordersEnabled(false);
                 tiles[tilesIndex].setActionCommand(Integer.toString(tilesIndex + 1));
                 tiles[tilesIndex].addHActionListener(this);
                 scene.add(tiles[tilesIndex]);
@@ -118,18 +113,6 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
 
         scene.validate();
         scene.setVisible(true);
-    }
-
-    public void startXlet() {
-    
-    }
-
-    public void pauseXlet() {
-     
-    }
-
-    public void destroyXlet(boolean unconditional) {
-     
     }
     
     public void actionPerformed(ActionEvent arg0) {
@@ -169,7 +152,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             moves++;
             movesText.setTextContent(movesString + Integer.toString(moves), HVisible.NORMAL_STATE);
             score -= lostScorePerMove;
-            scoreText.setTextContent(scoreString + NumberFormat.getInstance().format(score), HVisible.NORMAL_STATE);
+            scoreText.setTextContent(scoreString + format(score), HVisible.NORMAL_STATE);
         }
     }
     
@@ -181,17 +164,6 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             array[index] = array[i];
             array[i] = temp;
         }
-    }
-    
-    public int getEmptyTilePosition() {
-        for(int i = 0; i < indexes.length; i++) {
-            if(indexes[i] == amountOfTiles - 1) {
-                emptyTilePosition = i + 1;
-                break;
-            }
-        }
-        
-        return emptyTilePosition;
     }
     
     public void populateImageArray() {
@@ -215,12 +187,33 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     }
     
     public void createStatTexts(HScene scene) {
-          movesText = new HStaticText(movesString + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, textHeight);
-          timeText = new HStaticText(timeString + time, centerOffsetX, centerOffsetY + (tileSize * tileRows) + textHeight, tileSize * tileRows, textHeight);
-          scoreText = new HStaticText(scoreString + NumberFormat.getInstance().format(score), centerOffsetX, centerOffsetY + (tileSize * tileRows) + (textHeight * 2), tileSize * tileRows, textHeight);
-          scene.add(movesText);
-          scene.add(timeText);
-          scene.add(scoreText);
+        movesText = new HStaticText(movesString + moves, centerOffsetX, centerOffsetY + (tileSize * tileRows), tileSize * tileRows, textHeight);
+        timeText = new HStaticText(timeString + time, centerOffsetX, centerOffsetY + (tileSize * tileRows) + textHeight, tileSize * tileRows, textHeight);
+        scoreText = new HStaticText(scoreString + format(score), centerOffsetX, centerOffsetY + (tileSize * tileRows) + (textHeight * 2), tileSize * tileRows, textHeight);
+        scene.add(movesText);
+        scene.add(timeText);
+        scene.add(scoreText);
+    }
+    
+    public void setScene(HScene scene) {
+        scene.setBounds(0, 0, screenWidth, screenHeight);
+        scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        scene.setBackground(Color.BLACK);
+    }
+    
+    public int getEmptyTilePosition() {
+        for(int i = 0; i < indexes.length; i++) {
+            if(indexes[i] == amountOfTiles - 1) {
+                emptyTilePosition = i + 1;
+                break;
+            }
+        }
+        
+        return emptyTilePosition;
+    }
+    
+    public String format(int number) {
+        return NumberFormat.getInstance().format(number);
     }
     
     public void callback() {
@@ -229,7 +222,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             time++;
             timeText.setTextContent(timeString + Integer.toString(time), HVisible.NORMAL_STATE);
             score -= lostScorePerSecond;
-            scoreText.setTextContent(scoreString + NumberFormat.getInstance().format(score), HVisible.NORMAL_STATE);
+            scoreText.setTextContent(scoreString + format(score), HVisible.NORMAL_STATE);
             
             for(int i = 0; i < amountOfTiles; i++) {
                 if(tiles[i].getGraphicContent(HVisible.NORMAL_STATE).equals(images[i])) {
@@ -248,9 +241,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         scene.dispose();
 
         HScene winScene = HSceneFactory.getInstance().getDefaultHScene();
-        winScene.setBounds(0, 0, screenWidth, screenHeight);
-        winScene.setBackgroundMode(HVisible.BACKGROUND_FILL);
-        winScene.setBackground(Color.BLACK);
+        setScene(winScene);
 
         winText = new HStaticText(winString, 0, 0, screenWidth, textHeight * 2);
         madeByText = new HStaticText(madeByString, 0, textHeight + (textHeight / 2), screenWidth, textHeight);
@@ -289,5 +280,17 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
                 }
             }
         }
+    }
+    
+    public void startXlet() {
+    
+    }
+
+    public void pauseXlet() {
+     
+    }
+
+    public void destroyXlet(boolean unconditional) {
+     
     }
 }
