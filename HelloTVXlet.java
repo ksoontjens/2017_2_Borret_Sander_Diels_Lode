@@ -16,6 +16,7 @@ import java.util.Timer;
  */
 public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     HScene scene = HSceneFactory.getInstance().getDefaultHScene();
+    HScene winScene = HSceneFactory.getInstance().getDefaultHScene();
     int screenWidth = 720;
     int screenHeight = 576;
     int tileSize = 100;
@@ -190,10 +191,21 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     
     public void callback() {
         if(timerStart) {
+            int correctTiles = 0;
             time++;
             timeText.setTextContent(timeString + Integer.toString(time), HVisible.NORMAL_STATE);
             score -= lostScorePerSecond;
             scoreText.setTextContent(scoreString + Integer.toString(score), HVisible.NORMAL_STATE);
+            
+            for(int i = 0; i < amountOfTiles; i++) {
+                if(tiles[i].getGraphicContent(HVisible.NORMAL_STATE).equals(images[i])) {
+                    correctTiles++;
+                }
+            }
+            System.out.println(correctTiles);
+            if(correctTiles >= amountOfTiles - 1) {
+                System.out.println("You win!");
+            }
         }
     }
 }
