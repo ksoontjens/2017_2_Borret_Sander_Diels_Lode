@@ -53,33 +53,18 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             }
         }
         
+        
         for(int i = 0; i < amountOfTiles; i++) {
-            if(i == 0) {
-                tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i + 2], tiles[i + 1]);
-            }
-            else if(i == 1) {
-                tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i - 1], tiles[i + 1]);
-            }
-            else if(i == 2) {
-                tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i - 1], tiles[i - 2]);
-            }
-            else if(i == 3) {
-                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i + 2], tiles[i + 1]);
-            }
-            else if(i == 4) {
-                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i - 1], tiles[i + 1]);
-            }
-            else if(i == 5) {
-                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i - 1], tiles[i - 2]);
-            }
-            else if(i == 6) {
-                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i + 2], tiles[i + 1]);
-            }
-            else if(i == 7) {
-                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i - 1], tiles[i + 1]);
-            }
-            else if(i == 8) {
-                tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i - 1], tiles[i - 2]);
+            switch(i) {
+                case 0: tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i + 2], tiles[i + 1]); break;
+                case 1: tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i - 1], tiles[i + 1]); break;
+                case 2: tiles[i].setFocusTraversal(tiles[i + 6], tiles[i + 3], tiles[i - 1], tiles[i - 2]); break;
+                case 3: tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i + 2], tiles[i + 1]); break;
+                case 4: tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i - 1], tiles[i + 1]); break;
+                case 5: tiles[i].setFocusTraversal(tiles[i - 3], tiles[i + 3], tiles[i - 1], tiles[i - 2]); break;
+                case 6: tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i + 2], tiles[i + 1]); break;
+                case 7: tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i - 1], tiles[i + 1]); break;
+                case 8: tiles[i].setFocusTraversal(tiles[i - 3], tiles[i - 6], tiles[i - 1], tiles[i - 2]); break;
             }
         }
         
@@ -129,13 +114,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
             tiles[pressedTileNumber - 1].setActionCommand(emptyString);
             tiles[pressedTileNumber - 1].setGraphicContent(images[amountOfTiles - 1], HVisible.NORMAL_STATE);
             
-            indexes[pressedTileNumber - 1] = amountOfTiles - 1;
-            indexes[emptyTilePosition - 1] = pressedTileNumber - 1;
-            
             emptyTilePosition = pressedTileNumber;
             
             for(int i = 0; i < indexes.length; i++) {
-                System.out.println(indexes[i]);
+                System.out.println("[" + i + "]: " + indexes[i]);
             }
         }
     }
