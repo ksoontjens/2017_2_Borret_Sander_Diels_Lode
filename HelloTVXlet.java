@@ -127,7 +127,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             if(pressedTileNumber == (emptyTilePosition - 1) && emptyTilePosition != 4  && emptyTilePosition != 7) {
                 tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber + 1));
             }
-            else if(pressedTileNumber == (emptyTilePosition + 1) && emptyTilePosition !=3 && emptyTilePosition != 6) {
+            else if(pressedTileNumber == (emptyTilePosition + 1) && emptyTilePosition != 3 && emptyTilePosition != 6) {
                 tiles[emptyTilePosition - 1].setActionCommand(Integer.toString(pressedTileNumber - 1));
             }
             else if(pressedTileNumber == (emptyTilePosition - 3)) {
