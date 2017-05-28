@@ -37,6 +37,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     int time = 0;
     int score = 1000000;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    int correctIndexes[] = indexes;
     int lostScorePerMove = 500;
     int lostScorePerSecond = 250;
     int textHeight = 40;
@@ -80,6 +81,7 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         timer.scheduleAtFixedRate(gameTimer, 0, 1000);
         
         shuffleArray(indexes);
+        
         emptyTilePosition = getEmptyTilePosition();
         tilesIndex = 0;
         populateImageArray();
@@ -166,6 +168,10 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
             array[index] = array[i];
             array[i] = temp;
         }
+        
+        if(!isSolvable(array)) {
+            shuffleArray(array);
+        }
     }
     
     public void populateImageArray() {
@@ -201,6 +207,24 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         scene.setBounds(0, 0, screenWidth, screenHeight);
         scene.setBackgroundMode(HVisible.BACKGROUND_FILL);
         scene.setBackground(Color.BLACK);
+    }
+    
+    public boolean isSolvable(int[] p) {
+        int inversions = 0;
+
+        for(int i = 0; i < p.length - 1; i++) {
+            // Check if a larger number exists after the current
+            // place in the array, if so increment inversions.
+            for(int j = i + 1; j < p.length; j++)
+                if(p[i] > p[j]) inversions++;
+
+            // Determine if the distance of the blank space from the bottom 
+            // right is even or odd, and increment inversions if it is odd.
+            if(p[i] == 8 && i % 2 == 1) inversions++;
+        }
+
+        // If inversions is even, the puzzle is solvable.
+        return (inversions % 2 == 0);
     }
     
     public int getEmptyTilePosition() {
