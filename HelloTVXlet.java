@@ -37,7 +37,6 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
     int time = 0;
     int score = 1000000;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-    int correctIndexes[] = indexes;
     int lostScorePerMove = 500;
     int lostScorePerSecond = 250;
     int textHeight = 40;
@@ -81,7 +80,6 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener, Us
         timer.scheduleAtFixedRate(gameTimer, 0, 1000);
         
         shuffleArray(indexes);
-        
         emptyTilePosition = getEmptyTilePosition();
         tilesIndex = 0;
         populateImageArray();
